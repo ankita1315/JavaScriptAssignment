@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+   <title>Indian Population</title>
+   <!-- <link href="css/chart_css.css" rel="stylesheet" /> -->
+</head>
+​
+<body>
+  <script src="http://d3js.org/d3.v2.js"></script>
+
+   <!-- <script src="js/d3.js"></script> -->
+        <!-- <script src="js/d3.min.js"></script> -->
+        <!-- <div id="chart"></div> -->
+  <!-- // <script src="bar_chart.js"></script> -->
+
+  <script>
+var request = new XMLHttpRequest();
+request.open("GET", "jsonF1.json", false);//my first output file
+request.send(null);
+var json = JSON.parse(request.responseText);
+var urban = [];
+var rural = [];
+for(var i=0;i<json.length;i++)
+{
+ if(json[i].IndicatorCode=="SP.RUR.TOTL.ZS")
+  {
+   rural.push(json[i]);
+ } else
+ {
+   urban.push(json[i]);
+ }
+}
+function multi_chart(urban, rural)
+{
+ var width = 1000,
+     height = 500,
+     padding = 100;
+ var container = d3.select("body").append("svg")
+              .attr("width", width)
+              .attr("height", height);
+ var xAxisScale = d3.scale.linear()
+  .domain([1960, 2015])
+  .range([0, 800]);
+ var xAxis = d3.svg.axis().orient("bottom").scale(xAxisScale);
+ var xAxisGroup = container.append("g").attr("transform", "translate(100," + (height - padding +10) + ")").call(xAxis);
+ var yAxisScale = d3.scale.linear()
+  .domain([100, 0])
+  .range([0, 400]);
+ var yAxis = d3.svg.axis().orient("left").scale(yAxisScale);
+ var yAxisGroup = container.append("g").attr("transform", "translate("+padding+",10)").call(yAxis);
+ var div = d3.select("body")
+ .append("div")
+ .style("opacity", 0);
+
+ container.append("text")
+         .attr("class", "yaxis_label")
+         .attr("text-anchor", "middle")
+         .attr("transform", "translate("+ (padding/2) +","+(height/2)+")rotate(-90)")
+         .text("Population (%)");
+
+ container.append("text")
+         .attr("class", "xaxis_label")
+         .attr("text-anchor", "middle")
+         .attr("transform", "translate("+ (width/2) +","+(height-40)+")")
+         .text("Year");
+
+ container.append("text")
+         .attr("text-anchor", "middle")
+         .attr("transform", "translate("+ (width/2) +","+(height-20)+")")
+
+ var urbanvalues = d3.svg.line()
+                         .x(function(d) { return 100+(d.Year-1960)*(800/55); })
+                         .y(function(d) { return (400-d.Value*4)+10; })
+                         .interpolate("linear");
+ var urbangraph = container.append("path")
+                           .attr("d", urbanvalues(urban))
+                           .attr("stroke", "black")
+                           .attr("stroke-width", 2)
+                           .attr("fill", "none");
+
+ var ruralvalues = d3.svg.line()
+                         .x(function(d) { return 100+(d.Year-1960)*(800/55); })
+                         .y(function(d) { return (400-d.Value*4)+10; })
+                         .interpolate("linear");
+
+ var ruralgraph = container.append("path")
+                           .attr("d", ruralvalues(rural))
+                           .attr("stroke", "blue")
+                           .attr("stroke-width", 2)
+                           .attr("fill", "none");
+
+ container.selectAll("circle")
+     .data(json)
+     .enter().append("circle")
+     .attr("cx", function(d) { return 100+(d.Year-1960)*(800/55); })
+     .attr("cy", function(d) { return (400-d.Value*4)+10; })
+     .attr("r", 4)
+     .style("fill", "black");
+}
+ multi_chart(urban, rural);
+
+</script>
+​
+</body>
+</html>

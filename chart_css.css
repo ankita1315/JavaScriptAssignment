@@ -1,0 +1,36 @@
+svg {
+    background-color:pink;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+.axis path,
+.axis line {
+    fill:none;
+    stroke: #000;
+    shape-rendering:crishpEdges;
+}
+// layout
+.wrapper {
+  background: #f2f2f2;
+  margin: auto;
+  text-align: center;
+  width: 1200px;
+}
+.wrapper {
+  padding-top: 20px;
+}
+.wrapper h2 {
+  padding-bottom: 4px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+    text-align:center;
+}
+.divider {
+  margin-top: 30px;
+  border-top: 1px solid #bbb;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+}
